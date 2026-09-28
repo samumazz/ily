@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Animation - GitHub Pages</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            display: block;
+            background-color: #000000;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="heartCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('heartCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        let scale = 11;
+        let i = 0;
+
+        // Velocità del disegno in millisecondi per punto (es. 20ms = ~50 punti/sec)
+        const delay = 67; 
+
+        function drawNextStep() {
+            if (scale > 16) return;
+
+            const angle = i * (Math.PI * 2) / 120;
+
+            // Equazione del cuore
+            const rawX = 16 * Math.pow(Math.sin(angle), 3);
+            const rawY = 13 * Math.cos(angle) - 5 * Math.cos(2 * angle) - 2 * Math.cos(3 * angle) - Math.cos(4 * angle);
+
+            // Posizionamento al centro dello schermo
+            const x = canvas.width / 2 + rawX * scale;
+            const y = canvas.height / 2 - rawY * scale;
+
+            // Colore bianco per il testo
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 8pt Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('I love you', x, y);
+
+            i++;
+            if (i >= 120) {
+                i = 0;
+                scale++;
+            }
+
+            // Uso di setTimeout per controllare la velocità dell'animazione
+            setTimeout(drawNextStep, delay);
+        }
+
+        drawNextStep();
+    </script>
+</body>
+</html>
